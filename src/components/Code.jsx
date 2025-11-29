@@ -7,17 +7,11 @@ function Code({onSetVerify, email}){
     const [code, setCode]= useState(null);
     const [token, setToken]=useState(null);
 
-    useEffect(() => {
-        if (token) {
-            console.log('Token has been successfully updated in state:', token);
-        }
-    }, [token]);
-
     const getCode=(e)=>{
         setCode(e.target.value)
     }
     const handleSubmission = async () => {
-        const fullUrl = `${baseURL}/verify-code`;
+        const fullUrl = `${baseURL}/email/verify-code`;
         const res = await axios.post(fullUrl, { email: email, code: code });
         console.log('Response Data (The new token):', res.data);
 

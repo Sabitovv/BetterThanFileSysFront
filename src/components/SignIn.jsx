@@ -16,9 +16,10 @@ function SignIn({ onSign }) {
             return;
         }
 
-        const fullUrl = `${baseURL}/code`;
+        const fullUrl = `${baseURL}/email/code`;
 
         try {
+            console.log(fullUrl)
             const res = await axios.post(fullUrl, { email: email });
             onSign(true,email);
 

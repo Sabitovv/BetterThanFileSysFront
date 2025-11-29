@@ -5,7 +5,7 @@ import axios from 'axios';
 // 1. Создаем экземпляр Axios
 const api = axios.create({
     // Здесь мы используем VITE_API_URL, как в вашем Code.jsx
-    baseURL: import.meta.env.FILE_API_URL, 
+    baseURL: import.meta.env.VITE_API_URL, 
     // Можете добавить другие настройки, например, таймаут
     // timeout: 5000,
 });
@@ -15,14 +15,12 @@ api.interceptors.request.use(
     (config) => {
         // Получаем токен из localStorage
         const token = localStorage.getItem('authToken'); 
-        console.log(token)
 
         // Если токен существует, добавляем его в заголовок Authorization
         if (token) {
             // Формат Bearer Token: 'Bearer ' + токен
             config.headers.Authorization = `Bearer ${token}`;
         }
-        console.log(config)
         return config;
     },
     (error) => {
