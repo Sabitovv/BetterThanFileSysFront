@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # ВАШЕ ПРИЛОЖЕНИЕ (Скачивается из Docker Hub)
+  app:
+    image: ruslan2345/my-backend:latest  # <--- ВАЖНО: Укажите ваш образ
+    container_name: spring-app
+    ports:
+      - "8086:8086"
+    depends_on:
+      - postgres_db
+      - redis_cache
+      - minio
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_db:5432/my_database
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATA_REDIS_HOST=redis_cache
+      - MINIO_URL=http://minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadminpassword
+      - MINIO_BUCKET_NAME=user-files
+
+  # БАЗА ДАННЫХ
+  postgres_db:
+    image: postgres:15-alpine
+    container_name: postgres_container
+    environment:
+      POSTGRES_DB: my_database
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432" # Фронтендер может подключиться к БД локально через порт 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # REDIS
+  redis_cache:
+    image: redis:alpine
+    container_name: redis_container
+    ports:
+      - "6379:6379"
+
+  # MINIO
+  minio:
+    image: minio/minio:latest
+    container_name: minio_s3
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: "minioadmin"
+      MINIO_ROOT_PASSWORD: "minioadminpassword"
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+
+volumes:
+  postgres_data:
+  minio_data:
