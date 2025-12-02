@@ -2,7 +2,6 @@ import { useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import api from '../../api/api'
 
-// Добавляем currentParentId в пропсы
 function Modal({ isOpen, onClose, onCreate, currentParentId }) { 
     if (!isOpen) return null;
     
