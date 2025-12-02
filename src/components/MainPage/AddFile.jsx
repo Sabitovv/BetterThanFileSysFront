@@ -9,6 +9,9 @@
         import Modal from './Modal';
         import api from '../../api/api';
         function AddFile() {
+            const [selectedId, setSelectedId] = useState(null);
+            const [clipboardItem, setClipboardItem] = useState(null);
+
             const [updateId, setUpdateID]=useState(null)
 
             
@@ -148,16 +151,12 @@
                 );
             };
 
-
             const handleUpdateName = async (id, newName) => {
                 try {
                     const current = items.find(it => it.id === id);
                     if (!current) return;
-                    if (current.name === newName) return;
-                
                     await api.patch(`/files/${id}/rename`, { newName: newName });
                     loadFolderContent(currentFolderId);
-                    
                 
                     setItems(prev =>
                         prev.map(it =>
@@ -176,7 +175,6 @@
                     e.stopPropagation();
                     
                     const newName = e.target.value.trim();
-                    if (!newName) return;
                     await handleUpdateName(id, newName);
 
                     setUpdateID(null);
@@ -188,6 +186,7 @@
                     setUpdateID(null);
                 }
             };
+
             const saveOnBlur = async (e, id) => {
                 const current = items.find(it => it.id === id);
                 const newName = current?.name ?? "";
@@ -202,6 +201,46 @@
                 }
                 setUpdateID(null);
             };
+
+            /*Click*/
+            const handleSingleClick = (e, item) => {
+                e.stopPropagation();
+                setSelectedId(item.id);
+            };
+
+            const handleDoubleClick = (e, item) => {
+                e.stopPropagation();
+                handleItemClick(item); 
+            };
+
+            /*COPY PASS*/
+            useEffect(() => {
+                const handleKeyDown = async (e) => {
+                    if (e.ctrlKey && e.key === 'c') {
+                        if (selectedId == null) return;
+                    
+                        const item = items.find(i => i.id === selectedId);
+                        if (!item) return;
+                    
+                        setClipboardItem(item); 
+                    }
+                    if (e.ctrlKey && e.key === 'v') {
+                        if (!clipboardItem) return;
+                    
+                        try {
+                            const res = await api.patch(
+                                `/files/${clipboardItem.id}/move`,
+                                { newParentId: currentFolderId });
+                            loadFolderContent(currentFolderId);
+                        } catch (err) {
+                            console.error("Ошибка вставки", err);
+                        }
+                    }
+                };
+            
+                window.addEventListener("keydown", handleKeyDown);
+                return () => window.removeEventListener("keydown", handleKeyDown);
+            }, [selectedId, clipboardItem, items, currentFolderId]);
 
 
 
@@ -257,7 +296,8 @@
                                 ) : (
                                     items.map((item) => (
                                         <div 
-                                            onClick={() => handleItemClick(item)} 
+                                            onClick={(e) => handleSingleClick(e, item)}
+                                            onDoubleClick={(e) => handleDoubleClick(e, item)}
                                             key={item.id} 
                                             className="flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors cursor-pointer group"
                                         >
