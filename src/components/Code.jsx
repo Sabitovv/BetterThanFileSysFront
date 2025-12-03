@@ -24,7 +24,7 @@ function Code() {
         }
 
         try {
-            const res = await axios.post(`${baseURL}/email/verify-code`, {
+            const res = await api.post(`/email/verify-code`, {
                 email,
                 code
             });

@@ -17,7 +17,7 @@ function SignIn() {
         if (!email) return;
 
         try {
-            await axios.post(`${baseURL}/email/code`, { email });
+            await api.post(`/email/code`, { email });
             localStorage.setItem("email", email);
             navigate("/code");
 
