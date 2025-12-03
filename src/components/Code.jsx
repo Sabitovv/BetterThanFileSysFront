@@ -12,7 +12,6 @@ function Code({onSetVerify, email}){
     const handleSubmission = async () => {
         const fullUrl = `${baseURL}/email/verify-code`;
         const res = await axios.post(fullUrl, { email: email, code: code });
-        console.log('Response Data (The new token):', res.data);
 
             if (res.data && res.data.token) {
                 localStorage.setItem('authToken', res.data.token);
