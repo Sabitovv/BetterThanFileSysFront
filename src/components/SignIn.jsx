@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import api from '../api/api'
 
-function SignIn({ onSign }) {
+function SignIn() {
     const navigate = useNavigate();
     const baseURL = import.meta.env.VITE_API_URL;
     const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ function SignIn({ onSign }) {
         if (!email) return;
 
         try {
-            await axios.post(`${baseURL}/email/code`, { email });
+            await api.post(`${baseURL}/email/code`, { email });
             localStorage.setItem("email", email);
             navigate("/code");
 

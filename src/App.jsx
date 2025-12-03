@@ -4,6 +4,7 @@ import Code from "./components/Code";
 import AddFile from "./components/MainPage/AddFile";
 import PrivateRoute from "./components/PrivateRoute";
 
+
 function App() {
     return (
         <BrowserRouter>
