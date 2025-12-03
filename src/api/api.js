@@ -6,8 +6,6 @@ import axios from 'axios';
 const api = axios.create({
     // Здесь мы используем VITE_API_URL, как в вашем Code.jsx
     baseURL: import.meta.env.VITE_API_URL, 
-    // Можете добавить другие настройки, например, таймаут
-    // timeout: 5000,
 });
 
 // 2. Настройка Перехватчика Запросов (Request Interceptor)

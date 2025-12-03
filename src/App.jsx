@@ -15,7 +15,7 @@ function App() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("token");
     const verified = localStorage.getItem("verified");
 
     if (token) {
@@ -29,7 +29,7 @@ function App() {
     setLoading(false);
   }, []);
 
-  if (loading) return null; 
+  if (loading) return null;
 
   return (
     <>

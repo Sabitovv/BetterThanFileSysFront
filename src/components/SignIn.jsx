@@ -5,7 +5,7 @@ function SignIn({ onSign }) {
     const baseURL = import.meta.env.VITE_API_URL;
     const [email, setEmail] = useState('');
     const [error, setError] = useState(null); 
-    const getEmail = (e) => {
+    const getEmail = (e) => {   
         setEmail(e.target.value);
         setError(null); 
     }

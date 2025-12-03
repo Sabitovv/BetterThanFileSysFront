@@ -13,12 +13,12 @@ function Code({onSetVerify, email}){
         const fullUrl = `${baseURL}/email/verify-code`;
         const res = await axios.post(fullUrl, { email: email, code: code });
 
-            if (res.data && res.data.token) {
-                localStorage.setItem('authToken', res.data.token);
-                onSetVerify(true);
-            } else {
-            }
+        if (res.data && res.data.token) {
+            localStorage.setItem('token', res.data.token);
+            onSetVerify(true);
         }
+    }
+
     const submitOnEnter= async(e)=>{
         if(e.key==="Enter"){
             handleSubmission()
