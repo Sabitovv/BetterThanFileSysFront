@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import api from '../api/api'
+import axios from 'axios';
 
 function Code() {
     const email = localStorage.getItem("email");  
@@ -23,7 +24,7 @@ function Code() {
         }
 
         try {
-            const res = await api.post(`${baseURL}/email/verify-code`, {
+            const res = await axios.post(`${baseURL}/email/verify-code`, {
                 email,
                 code
             });

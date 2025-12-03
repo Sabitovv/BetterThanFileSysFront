@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from '../api/api'
+import axios from "axios";
 
 function SignIn() {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ function SignIn() {
         if (!email) return;
 
         try {
-            await api.post(`${baseURL}/email/code`, { email });
+            await axios.post(`${baseURL}/email/code`, { email });
             localStorage.setItem("email", email);
             navigate("/code");
 
