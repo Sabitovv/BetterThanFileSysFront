@@ -1,29 +1,53 @@
-  import { BrowserRouter } from "react-router-dom";
-  import { useState } from "react";
-  import SignIn from "./components/SignIn"
-  import Code from "./components/Code"
-  import AddFile from "./components/MainPage/AddFile"
-  import Modal from "./components/MainPage/Modal"
-  import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+import { useEffect, useState } from "react";
+import SignIn from "./components/SignIn"
+import Code from "./components/Code"
+import AddFile from "./components/MainPage/AddFile"
 
-  function App() {
-    const [sign, setSign]= useState(false);
-    const [isVerify, setIsVerify]= useState(false)
-    const [userEmail, setUserEmail] = useState('');
+function App() {
+  const [sign, setSign] = useState(false);
+  const [isVerify, setIsVerify] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [loading, setLoading] = useState(true);
 
-    const handleSign=(val, email)=>{
-      setSign(val)
-      setUserEmail(email)
+  const handleSign = (val, email) => {
+    setSign(val);
+    setUserEmail(email);
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    const verified = localStorage.getItem("verified");
+
+    if (token) {
+      setSign(true);
     }
-    return (
-      <>
-        {!sign && <SignIn onSign={handleSign}/>}
-        {sign && !isVerify && <Code onSetVerify={setIsVerify} email={userEmail} />}
-        {sign && isVerify && (<AddFile />)}
-        {/* <AddFile />
-        {/* <Modal/> */}
-      </>
-    );
-  }
 
-  export default App;
+    if (verified === "true") {
+      setIsVerify(true);
+    }
+
+    setLoading(false);
+  }, []);
+
+  if (loading) return null; 
+
+  return (
+    <>
+      {!sign && <SignIn onSign={handleSign} />}
+
+      {sign && !isVerify && (
+        <Code
+          onSetVerify={(v) => {
+            setIsVerify(v);
+            if (v) localStorage.setItem("verified", "true");
+          }}
+          email={userEmail}
+        />
+      )}
+
+      {sign && isVerify && <AddFile />}
+    </>
+  );
+}
+
+export default App;
