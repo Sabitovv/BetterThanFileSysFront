@@ -228,7 +228,7 @@
                         if (!clipboardItem) return;
                     
                         try {
-                            const res = await api.patch(
+                            await api.patch(
                                 `/files/${clipboardItem.id}/move`,
                                 { newParentId: currentFolderId });
                             loadFolderContent(currentFolderId);
