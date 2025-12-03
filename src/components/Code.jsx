@@ -1,27 +1,35 @@
 import { Email } from "@mui/icons-material";
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
-function Code({onSetVerify, email}){
+
+function Code(){
     const baseURL = import.meta.env.VITE_API_URL;
+    const navigate = useNavigate();
     const [code, setCode]= useState(null);
+    const email = localStorage.getItem("email");
 
     const getCode=(e)=>{
         setCode(e.target.value)
     }
-    const handleSubmission = async () => {
-        const fullUrl = `${baseURL}/email/verify-code`;
-        const res = await axios.post(fullUrl, { email: email, code: code });
+        const handleSubmit = async () => {
+            const res = await axios.post(`${baseURL}/email/verify-code`, {
+                email,
+                code
+            });
 
-        if (res.data && res.data.token) {
-            localStorage.setItem('token', res.data.token);
-            onSetVerify(true);
+            if (res.data?.token) {
+                localStorage.setItem("token", res.data.token);
+                localStorage.removeItem("email");
+
+                navigate("/");
         }
-    }
+
 
     const submitOnEnter= async(e)=>{
         if(e.key==="Enter"){
-            handleSubmission()
+            handleSubmit()
         }
     }
     return(
@@ -34,5 +42,6 @@ function Code({onSetVerify, email}){
             </div>
         </div>
     )
+}
 }
 export default Code;

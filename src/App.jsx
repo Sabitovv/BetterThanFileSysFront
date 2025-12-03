@@ -1,53 +1,31 @@
-import { useEffect, useState } from "react";
-import SignIn from "./components/SignIn"
-import Code from "./components/Code"
-import AddFile from "./components/MainPage/AddFile"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import SignIn from "./components/SignIn";
+import Code from "./components/Code";
+import AddFile from "./components/MainPage/AddFile";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
-  const [sign, setSign] = useState(false);
-  const [isVerify, setIsVerify] = useState(false);
-  const [userEmail, setUserEmail] = useState('');
-  const [loading, setLoading] = useState(true);
+    return (
+        <BrowserRouter>
+            <Routes>
 
-  const handleSign = (val, email) => {
-    setSign(val);
-    setUserEmail(email);
-  };
+                <Route path="/signin" element={<SignIn />} />
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const verified = localStorage.getItem("verified");
+                <Route path="/code" element={<Code />} />
 
-    if (token) {
-      setSign(true);
-    }
+                <Route
+                    path="/"
+                    element={
+                        <PrivateRoute>
+                            <AddFile />
+                        </PrivateRoute>
+                    }
+                />
 
-    if (verified === "true") {
-      setIsVerify(true);
-    }
-
-    setLoading(false);
-  }, []);
-
-  if (loading) return null;
-
-  return (
-    <>
-      {!sign && <SignIn onSign={handleSign} />}
-
-      {sign && !isVerify && (
-        <Code
-          onSetVerify={(v) => {
-            setIsVerify(v);
-            if (v) localStorage.setItem("verified", "true");
-          }}
-          email={userEmail}
-        />
-      )}
-
-      {sign && isVerify && <AddFile />}
-    </>
-  );
+                <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
 export default App;

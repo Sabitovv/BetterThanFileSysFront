@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 function SignIn({ onSign }) {
+    const navigate = useNavigate();
     const baseURL = import.meta.env.VITE_API_URL;
     const [email, setEmail] = useState('');
     const [error, setError] = useState(null); 
@@ -11,34 +13,18 @@ function SignIn({ onSign }) {
     }
 
     const handleSign = async () => {
-        setError(null); 
-        if (!email) {
-            return;
-        }
-
-        const fullUrl = `${baseURL}/email/code`;
+        if (!email) return;
 
         try {
-            console.log(fullUrl)
-            const res = await axios.post(fullUrl, { email: email });
-            onSign(true,email);
+            await axios.post(`${baseURL}/email/code`, { email });
+            localStorage.setItem("email", email);
+            navigate("/code");
 
         } catch (err) {
-            console.error("API Request Failed:", err);
-            
-            if (err.response) {
-                const serverMessage = err.response.data?.message || err.response.data || `Ошибка сервера: ${err.response.status}`;
-                setError(serverMessage);
-
-            } else if (err.request) {
-                setError("Сетевая ошибка. Проверьте CORS на бэкенде или убедитесь, что сервер запущен.");
-                console.error("Likely CORS or Network Error. Check backend server and CORS settings.");
-            
-            } else {
-                setError("Неизвестная ошибка: проверьте конфигурацию клиента.");
-            }
+            setError(err.response?.data?.message || "Ошибка");
         }
-    }
+    };
+
     const submitOnEnter= async(e)=>{
         if(e.key==="Enter"){
             handleSign()
