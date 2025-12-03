@@ -33,6 +33,8 @@ function Code() {
             console.log("email:", email);
             console.log("code (string):", code);
             console.log("code type:", typeof code);
+            console.log("SERVER RESPONSE:", err.response);
+
 
 
             if (res.data?.token) {
