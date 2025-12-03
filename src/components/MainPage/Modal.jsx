@@ -35,6 +35,11 @@ function Modal({ isOpen, onClose, onCreate, currentParentId }) {
             setIsLoading(false);
         }
     };
+    const submitOnEnter= async(e)=>{
+        if(e.key==="Enter"){
+            handleCreate()
+        }
+    }
 
     return(
         <div 
@@ -59,6 +64,7 @@ function Modal({ isOpen, onClose, onCreate, currentParentId }) {
                     type="text" 
                     value={name} 
                     onChange={getName} 
+                    onKeyDown={(e) => submitOnEnter(e)}
                     placeholder='Folder name...' 
                     autoFocus
                     className="w-full px-3 py-2 rounded bg-[#1b2033] outline-none border border-transparent focus:border-amber-500 mb-4 text-white"

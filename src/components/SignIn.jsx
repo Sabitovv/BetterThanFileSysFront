@@ -39,6 +39,11 @@ function SignIn({ onSign }) {
             }
         }
     }
+    const submitOnEnter= async(e)=>{
+        if(e.key==="Enter"){
+            handleSign()
+        }
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#0f1320]">
@@ -52,6 +57,7 @@ function SignIn({ onSign }) {
                         placeholder="abcd@gmai.com" 
                         value={email} 
                         onChange={getEmail} 
+                        onKeyDown={(e) => submitOnEnter(e)}
                         className="w-full px-3 py-2 rounded bg-[#1b2033] outline-none mb-4"
                     />
                 </div>
