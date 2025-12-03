@@ -9,6 +9,7 @@ function Code() {
 
     const [code, setCode] = useState('');
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const getCode = (e) => {
         setCode(e.target.value);
@@ -22,20 +23,11 @@ function Code() {
         }
 
         try {
-
+            setLoading(true)
             const res = await api.post(`/email/verify-code`, {
                 email,
                 code: Number(code)
             });
-
-            console.log("=== VERIFY REQUEST ===");
-            console.log("URL:", `${baseURL}/email/verify-code`);
-            console.log("email:", email);
-            console.log("code (string):", code);
-            console.log("code type:", typeof code);
-            console.log("SERVER RESPONSE:", err.response);
-
-
 
             if (res.data?.token) {
                 localStorage.setItem("token", res.data.token);
@@ -45,6 +37,10 @@ function Code() {
         } catch (err) {
             setError(err.response?.data?.message || "Неверный код");
         }
+        finally {
+            setLoading(false); 
+        }
+
     };
 
     const submitOnEnter = async (e) => {
@@ -74,9 +70,13 @@ function Code() {
 
                 <button
                     onClick={handleSubmit}
-                    className="w-full bg-white text-black py-2 rounded-lg font-semibold hover:bg-purple-600 hover:text-white transition"
+                    disabled={loading}
+                    className={`w-full py-2 rounded-lg font-semibold transition
+                        ${loading ? "bg-gray-500 cursor-not-allowed text-white" 
+                                : "bg-white text-black hover:bg-purple-600 hover:text-white"}
+                    `}
                 >
-                    Verify
+                    {loading ? "Loading..." : "Verify"}
                 </button>
             </div>
         </div>

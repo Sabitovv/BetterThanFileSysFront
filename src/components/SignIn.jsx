@@ -6,17 +6,35 @@ import axios from "axios";
 function SignIn() {
     const navigate = useNavigate();
     const baseURL = import.meta.env.VITE_API_URL;
+
     const [email, setEmail] = useState('');
     const [error, setError] = useState(null); 
+    const [loading, setLoading] = useState(false);
+
+
     const getEmail = (e) => {   
         setEmail(e.target.value);
         setError(null); 
     }
 
+    const isValidEmail = (email) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
+
     const handleSign = async () => {
-        if (!email) return;
+        if (!email){
+            setError("Введите email");
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            setError("Введите корректный email");
+            return;
+        }
 
         try {
+            setLoading(true)
             await api.post(`/email/code`, { email });
             localStorage.setItem("email", email);
             navigate("/code");
@@ -24,6 +42,10 @@ function SignIn() {
         } catch (err) {
             setError(err.response?.data?.message || "Ошибка");
         }
+        finally {
+            setLoading(false); 
+        }
+
     };
 
     const submitOnEnter= async(e)=>{
@@ -56,10 +78,14 @@ function SignIn() {
                 )}
 
                 <button 
-                    className="w-full bg-white text-black py-2 rounded-lg font-semibold hover:bg-purple-600 hover:text-white transition" 
+                    className={`w-full py-2 rounded-lg font-semibold transition
+                        ${loading ? "bg-gray-500 cursor-not-allowed text-white" 
+                                : "bg-white text-black hover:bg-purple-600 hover:text-white"}
+                    `}
                     onClick={handleSign}
-                >
-                    Sign in
+                    disabled={loading}
+                >   
+                    {loading ? "Loading..." : "Sign in"}
                 </button>
             </div>
         </div>

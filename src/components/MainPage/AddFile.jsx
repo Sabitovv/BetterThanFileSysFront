@@ -8,7 +8,19 @@
         import ModeIcon from '@mui/icons-material/Mode';
         import Modal from './Modal';
         import api from '../../api/api';
+        import { useNavigate } from "react-router-dom";
+
         function AddFile() {
+
+            const navigate = useNavigate();
+
+            const handleLogout = () => {
+                localStorage.removeItem("token");
+                localStorage.removeItem("email");
+            
+                navigate("/signin");
+            };
+
             const [selectedId, setSelectedId] = useState(null);
             const [clipboardItem, setClipboardItem] = useState(null);
 
@@ -265,6 +277,7 @@
                                 <CreateNewFolderIcon className="text-white" sx={{ fontSize: '32px' }} />
                                 <span className="hidden sm:inline text-white font-semibold">Создать папку</span>
                             </button>
+
                         </div>
 
                         <div className="p-4 relative min-h-screen bg-gray-900 text-gray-200">
@@ -351,12 +364,20 @@
                                     ))
                                 )}
                             </div>
-
+                            <div></div>
                             <input type="file" id="file-upload" style={{ display: 'none' }} multiple onChange={handleFileUpload} />
+                            <button
+                                onClick={handleLogout}
+                                className="fixed bottom-6 right-24 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold shadow-md transition-all duration-300"
+                            >
+                                Logout
+                            </button>
+
                             <label htmlFor="file-upload">
                                 <div className={`fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center shadow-xl cursor-pointer transition-all duration-300 ${isUploading ? 'bg-gray-500 animate-pulse' : 'bg-amber-600 hover:bg-amber-700'}`}>
                                     {isUploading ? <span className="text-white text-xs">...</span> : <AddIcon className="text-white" sx={{ fontSize: '32px' }}/>}
                                 </div>
+                                
                             </label>
                         </div>
                     </div>
