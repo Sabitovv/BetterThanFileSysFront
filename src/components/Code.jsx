@@ -1,8 +1,6 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import api from '../api/api'
-import axios from 'axios';
 
 function Code() {
     const email = localStorage.getItem("email");  
@@ -24,10 +22,18 @@ function Code() {
         }
 
         try {
+
             const res = await api.post(`/email/verify-code`, {
                 email,
-                code
+                code: Number(code)
             });
+
+            console.log("=== VERIFY REQUEST ===");
+            console.log("URL:", `${baseURL}/email/verify-code`);
+            console.log("email:", email);
+            console.log("code (string):", code);
+            console.log("code type:", typeof code);
+
 
             if (res.data?.token) {
                 localStorage.setItem("token", res.data.token);
