@@ -10,7 +10,7 @@ function App() {
         <BrowserRouter>
             <Routes>
 
-                <Route path="/signin" element={<SignIn />} />
+            <Route path="/signin" element={localStorage.getItem("token")? <Navigate to="/" replace />: <SignIn /> }/>
 
                 <Route path="/code" element={<Code />} />
 
